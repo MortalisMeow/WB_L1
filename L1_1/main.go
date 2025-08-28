@@ -7,11 +7,9 @@ type Human struct {
 	age  int
 }
 
-func (h *Human) Add(name string, age int) *Human {
+func (h *Human) Add(name string, age int) {
 	h.name = name
 	h.age = age
-	return h
-
 }
 
 type Action struct {
