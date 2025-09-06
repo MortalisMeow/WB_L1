@@ -7,16 +7,21 @@ import (
 
 func main() {
 
-	time := time.After(3 * time.Second)
+	time := time.NewTimer(3 * time.Second)
+	defer time.Stop()
 	ch := make(chan int)
 	val := 1
 
 	go func() {
 		for {
 			select {
-			case <-time:
+			case <-time.C:
 				return
-			case res := <-ch:
+			case res, ok := <-ch:
+				if !ok {
+					time.Stop()
+					return
+				}
 				fmt.Printf("result : %d\n", res)
 
 			}
@@ -26,7 +31,7 @@ func main() {
 
 	for {
 		select {
-		case <-time:
+		case <-time.C:
 			return
 		case ch <- val:
 			val++
